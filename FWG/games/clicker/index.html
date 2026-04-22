@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clicker – FWG</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <a href="../../index.html" class="back-btn">&#8592; FWG</a>
+    <div class="header-title">
+      <span class="header-name">CLICKER</span>
+    </div>
+    <span class="header-spacer"></span>
+  </header>
+
+  <!-- ========== MAIN LAYOUT ========== -->
+  <main class="game-layout">
+
+    <!-- LEFT: Tutorial -->
+    <aside class="panel panel-left">
+      <div class="panel-header">
+        <span class="panel-icon">📖</span>
+        <h2 class="panel-title">TUTORIAL</h2>
+      </div>
+
+      <div class="tutorial-block">
+        <h3 class="tut-heading">🎯 TUJUAN</h3>
+        <p>Klik tombol sebanyak-banyaknya sebelum waktu habis! Pertahankan ritme klik cepat untuk menjaga <span class="hl orange">COMBO</span> tetap aktif.</p>
+      </div>
+
+      <div class="tutorial-block">
+        <h3 class="tut-heading">🖱️ KONTROL</h3>
+        <div class="key-list">
+          <div class="key-row">
+            <span class="key-icon">🖱️</span>
+            <span class="key-desc">Klik tombol besar</span>
+          </div>
+          <div class="key-row">
+            <span class="key-icon">👆</span>
+            <span class="key-desc">Tap (mobile)</span>
+          </div>
+          <div class="key-row">
+            <kbd>SPACE</kbd>
+            <span class="key-desc">Klik via keyboard</span>
+          </div>
+          <div class="key-row">
+            <kbd>R</kbd>
+            <span class="key-desc">Restart</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-block">
+        <h3 class="tut-heading">⏱️ MODE WAKTU</h3>
+        <div class="mode-list">
+          <div class="mode-row">
+            <span class="mode-badge s10">10s</span>
+            <span>Sprint kilat</span>
+          </div>
+          <div class="mode-row">
+            <span class="mode-badge s30">30s</span>
+            <span>Standar</span>
+          </div>
+          <div class="mode-row">
+            <span class="mode-badge s60">60s</span>
+            <span>Endurance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-block">
+        <h3 class="tut-heading">🔥 COMBO SYSTEM</h3>
+        <div class="point-list">
+          <div class="point-row"><span class="point-icon">⚡</span><span>Klik cepat = combo naik</span></div>
+          <div class="point-row"><span class="point-icon">💥</span><span>Tiap klik = <span class="hl orange">×combo poin</span></span></div>
+          <div class="point-row"><span class="point-icon">🧊</span><span>Berhenti &gt;0.8s = combo reset</span></div>
+          <div class="point-row"><span class="point-icon">🏆</span><span>Max combo = ×10</span></div>
+        </div>
+      </div>
+
+      <div class="tutorial-block">
+        <h3 class="tut-heading">💡 TIPS</h3>
+        <ul class="tip-list">
+          <li>Gunakan jari telunjuk + tengah bergantian</li>
+          <li>Di PC: gunakan mouse dengan klik cepat</li>
+          <li>Jaga ritme konstan agar combo tidak putus</li>
+          <li>Mode 10s cocok untuk CPS tinggi!</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- CENTER: Game -->
+    <section class="game-center">
+
+      <!-- Time mode selector -->
+      <div class="mode-bar">
+        <span class="mode-label">WAKTU:</span>
+        <div class="mode-group">
+          <button class="mode-btn" data-time="10">10s</button>
+          <button class="mode-btn active" data-time="30">30s</button>
+          <button class="mode-btn" data-time="60">60s</button>
+        </div>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="score-bar">
+        <div class="score-item">
+          <span class="score-label">SKOR</span>
+          <span class="score-value orange" id="score">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">🏆 BEST</span>
+          <span class="score-value green" id="highscore">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">KLIK</span>
+          <span class="score-value" id="clicks">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">CPS</span>
+          <span class="score-value cyan" id="cps">0.0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">COMBO</span>
+          <span class="score-value pink" id="comboDisplay">×1</span>
+        </div>
+      </div>
+
+      <!-- Game area -->
+      <div class="game-area" id="gameArea">
+
+        <!-- Timer ring -->
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" viewBox="0 0 120 120">
+            <circle class="ring-bg"   cx="60" cy="60" r="52"/>
+            <circle class="ring-fill" cx="60" cy="60" r="52" id="ringFill"/>
+          </svg>
+          <div class="timer-inner">
+            <span class="timer-val" id="timerVal">30</span>
+            <span class="timer-sub">detik</span>
+          </div>
+        </div>
+
+        <!-- Big click button -->
+        <button class="click-btn" id="clickBtn" aria-label="Klik!">
+          <span class="click-btn-icon">👆</span>
+          <span class="click-btn-label">KLIK!</span>
+        </button>
+
+        <!-- Combo bar under button -->
+        <div class="combo-track">
+          <div class="combo-fill" id="comboFill"></div>
+        </div>
+        <p class="combo-hint" id="comboHint">Klik cepat untuk combo!</p>
+
+        <!-- Floating +score particles container -->
+        <div class="particles" id="particles" aria-hidden="true"></div>
+
+        <!-- Overlay: Idle -->
+        <div class="overlay" id="overlayStart">
+          <p class="overlay-pre blink">READY?</p>
+          <h2 class="overlay-title">👆 CLICKER</h2>
+          <p class="overlay-sub">Klik secepat mungkin!</p>
+          <button class="btn-start" id="btnStart">▶ MULAI</button>
+        </div>
+
+        <!-- Overlay: Result -->
+        <div class="overlay" id="overlayResult" hidden>
+          <p class="overlay-pre blink">TIME'S UP!</p>
+          <h2 class="overlay-title">⏱️ SELESAI!</h2>
+          <div class="go-scores">
+            <div class="go-score-row">
+              <span>TOTAL KLIK</span>
+              <span class="go-val" id="goClicks">0</span>
+            </div>
+            <div class="go-score-row">
+              <span>SKOR</span>
+              <span class="go-val orange" id="goScore">0</span>
+            </div>
+            <div class="go-score-row">
+              <span>CPS RATA-RATA</span>
+              <span class="go-val cyan" id="goCps">0.0</span>
+            </div>
+            <div class="go-score-row">
+              <span>MAX COMBO</span>
+              <span class="go-val pink" id="goCombo">×1</span>
+            </div>
+            <div class="go-score-row hs">
+              <span>🏆 HIGHSCORE</span>
+              <span class="go-val green" id="goHighscore">0</span>
+            </div>
+          </div>
+          <p class="go-new" id="goNew" hidden>🎉 REKOR BARU!</p>
+          <button class="btn-start" id="btnRestart">↺ MAIN LAGI</button>
+        </div>
+
+      </div><!-- /game-area -->
+
+    </section>
+
+    <!-- RIGHT: Stats -->
+    <aside class="panel panel-right">
+      <div class="panel-header">
+        <span class="panel-icon">📊</span>
+        <h2 class="panel-title">STATISTIK</h2>
+      </div>
+
+      <div class="stat-block">
+        <h3 class="tut-heading">🏆 HIGHSCORE</h3>
+        <div class="stat-big orange" id="statHighscore">0</div>
+        <p class="stat-note" id="statHsMode">Mode 30s</p>
+      </div>
+
+      <div class="stat-block">
+        <h3 class="tut-heading">📈 SESI INI</h3>
+        <div class="stat-list">
+          <div class="stat-row">
+            <span>Game dimainkan</span>
+            <span class="stat-val" id="statPlayed">0</span>
+          </div>
+          <div class="stat-row">
+            <span>Total klik</span>
+            <span class="stat-val orange" id="statTotalClicks">0</span>
+          </div>
+          <div class="stat-row">
+            <span>CPS terbaik</span>
+            <span class="stat-val cyan" id="statBestCps">0.0</span>
+          </div>
+          <div class="stat-row">
+            <span>Max combo</span>
+            <span class="stat-val pink" id="statMaxCombo">×1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-block">
+        <h3 class="tut-heading">🔥 COMBO LEVEL</h3>
+        <div class="combo-level-grid" id="comboGrid"></div>
+        <p class="speed-note">Klik &lt;0.8s untuk naik</p>
+      </div>
+
+      <div class="stat-block">
+        <h3 class="tut-heading">🎮 SHORTCUT</h3>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><kbd>SPACE</kbd><span>Klik</span></div>
+          <div class="shortcut-row"><kbd>R</kbd><span>Restart</span></div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
